@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, MapPin, Star, Phone } from 'lucide-react';
-import { hospitals } from '../utils/constants';
-import { Hospital } from '../types';
+import { hospitals } from '../utils/constants.ts';
+import type { Hospital } from '../types.ts';
 
 const BookAppointment: React.FC = () => {
   const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(null);
