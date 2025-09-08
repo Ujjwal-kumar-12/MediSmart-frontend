@@ -1,0 +1,213 @@
+import React, { useState } from 'react';
+import { User, Clock, FileText, X, Eye, Calendar } from 'lucide-react';
+
+interface PatientPortalProps {
+  user: any;
+}
+
+const PatientPortal: React.FC<PatientPortalProps> = ({ user }) => {
+  const [isPortalOpen, setIsPortalOpen] = useState(false);
+  const [patientId, setPatientId] = useState('');
+
+  const mockAppointments = [
+    {
+      id: '1',
+      hospitalName: 'City General Hospital',
+      date: '2024-02-15',
+      time: '10:00 AM',
+      doctor: 'Dr. Sarah Johnson',
+      specialty: 'Cardiology',
+      status: 'scheduled'
+    },
+    {
+      id: '2',
+      hospitalName: 'MediCenter Plus',
+      date: '2024-01-20',
+      time: '02:30 PM',
+      doctor: 'Dr. Michael Chen',
+      specialty: 'General Medicine',
+      status: 'completed'
+    }
+  ];
+
+  const mockMedicalRecords = [
+    {
+      id: '1',
+      date: '2024-01-20',
+      diagnosis: 'Annual Health Checkup',
+      doctor: 'Dr. Michael Chen',
+      notes: 'All vitals normal. Continue current medication.'
+    },
+    {
+      id: '2',
+      date: '2024-01-10',
+      diagnosis: 'Hypertension Consultation',
+      doctor: 'Dr. Sarah Johnson',
+      notes: 'Blood pressure stable. Adjust medication dosage.'
+    }
+  ];
+
+  const handlePortalAccess = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (patientId.trim()) {
+      setIsPortalOpen(true);
+    }
+  };
+
+  return (
+    <section id="patient-portal" className="py-16 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Patient Portal
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Access your medical history, view past appointments, and manage your health records.
+          </p>
+        </div>
+
+        <div className="max-w-md mx-auto">
+          <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8 shadow-lg border border-gray-100">
+            <div className="text-center mb-6">
+              <div className="bg-blue-600 p-4 rounded-full inline-block mb-4">
+                <User className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+                Access Patient Portal
+              </h3>
+              <p className="text-gray-600">
+                Enter your Patient ID to view your medical records and appointment history.
+              </p>
+            </div>
+
+            <form onSubmit={handlePortalAccess} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Patient ID
+                </label>
+                <input
+                  type="text"
+                  value={patientId}
+                  onChange={(e) => setPatientId(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  placeholder="Enter your Patient ID (e.g., P123ABC)"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transform hover:scale-[1.02] transition-all duration-200 shadow-lg"
+              >
+                <Eye className="h-5 w-5 inline mr-2" />
+                Access Portal
+              </button>
+            </form>
+
+            <div className="mt-4 p-4 bg-blue-100 rounded-lg">
+              <p className="text-sm text-blue-700">
+                <strong>Demo ID:</strong> Your Patient ID is <code className="font-mono font-semibold">{user?.patientId || 'P123ABC'}</code>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Portal Modal */}
+        {isPortalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+              <div className="flex items-center justify-between p-6 border-b">
+                <h3 className="text-2xl font-bold text-gray-900">Patient Portal</h3>
+                <button
+                  onClick={() => setIsPortalOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X className="h-6 w-6 text-gray-600" />
+                </button>
+              </div>
+
+              <div className="p-6 max-h-[calc(90vh-100px)] overflow-y-auto">
+                <div className="grid md:grid-cols-2 gap-8">
+                  {/* Patient Info */}
+                  <div className="bg-blue-50 rounded-xl p-6">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                      <User className="h-5 w-5 mr-2 text-blue-600" />
+                      Patient Information
+                    </h4>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-sm text-gray-600">Name</label>
+                        <p className="font-medium">{user?.name}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm text-gray-600">Patient ID</label>
+                        <p className="font-medium font-mono">{user?.patientId}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm text-gray-600">Email</label>
+                        <p className="font-medium">{user?.email}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm text-gray-600">Phone</label>
+                        <p className="font-medium">{user?.phone}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Appointments */}
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                      <Calendar className="h-5 w-5 mr-2 text-green-600" />
+                      Appointment History
+                    </h4>
+                    <div className="space-y-3">
+                      {mockAppointments.map((appointment) => (
+                        <div key={appointment.id} className="bg-gray-50 rounded-lg p-4">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <p className="font-medium text-gray-900">{appointment.hospitalName}</p>
+                              <p className="text-sm text-gray-600">{appointment.doctor} - {appointment.specialty}</p>
+                              <p className="text-sm text-gray-500">{appointment.date} at {appointment.time}</p>
+                            </div>
+                            <span className={`px-2 py-1 text-xs rounded-full ${
+                              appointment.status === 'completed' 
+                                ? 'bg-green-100 text-green-700' 
+                                : 'bg-blue-100 text-blue-700'
+                            }`}>
+                              {appointment.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Medical Records */}
+                <div className="mt-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <FileText className="h-5 w-5 mr-2 text-purple-600" />
+                    Medical Records
+                  </h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {mockMedicalRecords.map((record) => (
+                      <div key={record.id} className="bg-purple-50 rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <h5 className="font-medium text-gray-900">{record.diagnosis}</h5>
+                          <span className="text-sm text-gray-500">{record.date}</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2">Dr. {record.doctor}</p>
+                        <p className="text-sm text-gray-700">{record.notes}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default PatientPortal;
